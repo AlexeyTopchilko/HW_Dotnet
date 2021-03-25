@@ -4,6 +4,10 @@ namespace HW_13
 {
     class Song
     {
+        private static int count { get; set; } = 1;
+
+        public int Id { get; } 
+
         public string Title { get; set; }
 
         public int Minutes { get; set; }
@@ -14,7 +18,6 @@ namespace HW_13
 
         public Genres Genre { get; set; }
 
-
         public enum Genres
         {
             Unknown,
@@ -24,12 +27,13 @@ namespace HW_13
             Jazz,
             Chanson
         }
-        static public int Length = Enum.GetNames(typeof(Genres)).Length;
+        static private int Length = Enum.GetNames(typeof(Genres)).Length;
 
         static public dynamic GetSongData(Song song)
         {
             var songsData = new
             {
+                Id = song.Id,
                 Title = song.Title,
                 Author = song.Author,
                 Minutes = song.Minutes,
@@ -40,6 +44,7 @@ namespace HW_13
         }
         public Song(string title, string author, int year, int minutes, int genre)
         {
+            Id = count;
             Title = ValidateTitleOrAuthor(title);
             Author = ValidateTitleOrAuthor(author);
             Year = ValidateYear(year);
@@ -48,18 +53,21 @@ namespace HW_13
                 Genre = (Genres)genre;
             else
                 Genre = default;
+            count++;
         }
 
         public Song(string title, string author, int year, int minutes, string genre)
         {
+            Id = count;
             Title = ValidateTitleOrAuthor(title);
             Author = ValidateTitleOrAuthor(author);
             Year = ValidateYear(year);
             Minutes = ValidateMinutes(minutes);
             Genre = ValidateGenre(genre);
+            count++;
         }
 
-        private static Genres ValidateGenre(string genre)
+        public static Genres ValidateGenre(string genre)
         {
             if (genre == null)
                 return Genres.Unknown;
@@ -76,7 +84,7 @@ namespace HW_13
             }
         }
 
-        private static int ValidateYear(int year)
+        public static int ValidateYear(int year)
         {
             if (year > DateTime.Now.Year)
                 return DateTime.Now.Year;
@@ -84,7 +92,7 @@ namespace HW_13
                 return year;
         }
 
-        private static string ValidateTitleOrAuthor(string name)
+        public static string ValidateTitleOrAuthor(string name)
         {
             if (name.Equals(string.Empty) || name == null)
                 return "Unknown";
@@ -92,7 +100,7 @@ namespace HW_13
                 return name;
         }
 
-        private static int ValidateMinutes(int minutes)
+        public static int ValidateMinutes(int minutes)
         {
             if (minutes < 0)
                 return 0;
